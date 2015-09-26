@@ -76,6 +76,7 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
         // Set OnItemClickListener so we can be notified on item clicks
        // mListView.setOnItemClickListener(this);
 
+
         return view;
     }
 
@@ -86,8 +87,16 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
         this.setEmptyText("NO DATA");
 
         mAdapter = new AppDataAdapter(getActivity());
+        Log.d(TAG, "mAdapter isEmpty: " +mAdapter.isEmpty());
         setListAdapter(mAdapter);
         getListView().setOnItemClickListener(this);
+
+
+        // mAdapter = new AppDataAdapter(getActivity());
+       // setListAdapter(mAdapter);
+       // getListView().setOnItemClickListener(this);
+//        ListPopulator listPopulator = new ListPopulator();
+//        listPopulator.execute();
 
     }
 
@@ -181,6 +190,38 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
           //  ((AppDataAdapter)mAdapter) = result;
             //TODO: implement onPostExecute!!
            // Log.d(TAG, "fetching finished... AppDataAdapter.this.appItems.size = " + AppDataAdapter.this.appItems.size());
+        }
+
+
+
+    }
+
+    private class ListPopulator extends AsyncTask<String, String, String>{
+
+        @Override
+        protected void onPreExecute() {
+            // Things to be done before execution of long running operation. For
+            // example showing ProgessDialog
+            Log.d(TAG, "TODO: SHOW PROGRESS DIALOG - start fetching data");
+
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            mAdapter = new AppDataAdapter(getActivity());
+
+
+
+
+            return null;
+        }
+
+        protected void onPostExecute() {
+            // execution of result of Long time consuming operation
+             setListAdapter(mAdapter);
+             getListView().setOnItemClickListener(ItemFragment.this);
+
         }
 
 

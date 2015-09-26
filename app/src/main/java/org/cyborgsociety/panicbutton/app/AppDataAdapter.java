@@ -40,8 +40,31 @@ public class AppDataAdapter extends BaseAdapter
 
     public AppDataAdapter(Context context){
         this.context = context;
-        AsyncTaskRunner taskRunner = new AsyncTaskRunner();
-        taskRunner.execute();
+        /*AsyncTaskRunner taskRunner = new AsyncTaskRunner();
+        taskRunner.execute();*/
+
+        PackageManager pm = context.getPackageManager();
+            /*
+             If flag PackageManager.GET_UNINSTALLED_PACKAGES has been set, a list of all
+             applications including those deleted with {@code DONT_DELETE_DATA} (partially
+             installed apps with data directory) will be returned.
+             */
+        List<ApplicationInfo> apps = pm.getInstalledApplications(0);
+        Log.d(TAG, "applist size: " + apps.size());
+        ArrayList resultList = new ArrayList<AppItem>();
+
+        for(ApplicationInfo app : apps) {
+            // public AppItem(String id, String appDescription, boolean deleteCache, boolean deleteData, String dataDir ) {
+
+            AppItem item = new AppItem(app.className, pm.getApplicationLabel(app).toString(), false, false, app.dataDir);
+            resultList.add(item);
+
+        }
+
+        Log.d(TAG, "resultList size: " + resultList.size());
+
+
+        this.appItems = resultList;
     }
 
 
