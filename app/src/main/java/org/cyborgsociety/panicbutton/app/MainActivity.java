@@ -15,19 +15,16 @@ import android.view.ViewGroup;
 import android.os.Build;
 
 
-public class MainActivity extends AppCompatActivity implements ItemFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity /* implements ItemFragment.OnFragmentInteractionListener  */{
 
     private static final String TAG = MainActivity.class.getName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ItemFragment())
-                    .commit();
-        }
+
     }
 
 
@@ -48,35 +45,18 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnFr
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_delete){
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+  /*  @Override
     public void onFragmentInteraction(String id) {
             Log.d(TAG, "something happende here...");
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
- /*   public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_item_list, container, false);
-           
-            return rootView;
-        }
-
-        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        }
+*/
 
 
-    }*/
 }

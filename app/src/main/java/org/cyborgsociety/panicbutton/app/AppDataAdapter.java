@@ -28,7 +28,7 @@ public class AppDataAdapter extends BaseAdapter
     private static final String TAG = AppDataAdapter.class.getName();
     private List<AppItem> appItems = new ArrayList<AppItem>();
     private Context context;
-    private AppContent appContentProvider;
+    //private AppContent appContentProvider;
 
 
     public AppDataAdapter(Context context, List<AppItem> data) {
@@ -40,9 +40,6 @@ public class AppDataAdapter extends BaseAdapter
 
     public AppDataAdapter(Context context){
         this.context = context;
-        /*AsyncTaskRunner taskRunner = new AsyncTaskRunner();
-        taskRunner.execute();*/
-
         PackageManager pm = context.getPackageManager();
             /*
              If flag PackageManager.GET_UNINSTALLED_PACKAGES has been set, a list of all
@@ -62,8 +59,6 @@ public class AppDataAdapter extends BaseAdapter
         }
 
         Log.d(TAG, "resultList size: " + resultList.size());
-
-
         this.appItems = resultList;
     }
 
@@ -141,66 +136,5 @@ public class AppDataAdapter extends BaseAdapter
         return convertView;
     }
 
-
-    private class AsyncTaskRunner extends AsyncTask<String, ArrayList<AppItem>, ArrayList<AppItem>>{
-
-        @Override
-        protected void onPreExecute() {
-            // Things to be done before execution of long running operation. For
-            // example showing ProgessDialog
-            Log.d(TAG, "TODO: SHOW PROGRESS DIALOG - start fetching data");
-        }
-
-
-        /**
-         * Override this method to perform a computation on a background thread. The
-         * specified parameters are the parameters passed to {@link #execute}
-         * by the caller of this task.
-         * <p/>
-         * This method can call {@link #publishProgress} to publish updates
-         * on the UI thread.
-         *
-         * @param params The parameters of the task.
-         * @return A result, defined by the subclass of this task.
-         * @see #onPreExecute()
-         * @see #onPostExecute
-         * @see #publishProgress
-         */
-        @Override
-        protected ArrayList<AppItem> doInBackground(String... params) {
-
-            PackageManager pm = context.getPackageManager();
-            /*
-             If flag PackageManager.GET_UNINSTALLED_PACKAGES has been set, a list of all
-             applications including those deleted with {@code DONT_DELETE_DATA} (partially
-             installed apps with data directory) will be returned.
-             */
-            List<ApplicationInfo> apps = pm.getInstalledApplications(0);
-            Log.d(TAG, "applist size: " + apps.size());
-            ArrayList resultList = new ArrayList<AppItem>();
-
-            for(ApplicationInfo app : apps) {
-                // public AppItem(String id, String appDescription, boolean deleteCache, boolean deleteData, String dataDir ) {
-
-                AppItem item = new AppItem(app.className, pm.getApplicationLabel(app).toString(), false, false, app.dataDir);
-                resultList.add(item);
-
-            }
-
-            Log.d(TAG, "resultList size: " + resultList.size());
-
-
-            return resultList;
-        }
-
-        protected void onPostExecute(ArrayList<AppItem> result) {
-            // execution of result of Long time consuming operation
-            AppDataAdapter.this.appItems = result;
-            Log.d(TAG, "fetching finished... AppDataAdapter.this.appItems.size = " + AppDataAdapter.this.appItems.size());
-        }
-
-
-
-    }
     
 }

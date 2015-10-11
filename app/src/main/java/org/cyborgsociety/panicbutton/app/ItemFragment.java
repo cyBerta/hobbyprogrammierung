@@ -35,10 +35,6 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
 
     private OnFragmentInteractionListener mListener;
 
-    /**
-     * The fragment's ListView/GridView.
-     */
-   // private AbsListView mListView;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -68,14 +64,7 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
-        // Set the adapter
-        //mListView = (AbsListView) view.findViewById(android.R.id.list);
-        // ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
-
-        // Set OnItemClickListener so we can be notified on item clicks
-       // mListView.setOnItemClickListener(this);
-
+        View view = inflater.inflate(R.layout.fragment_item_list, container, true);
 
         return view;
     }
@@ -87,16 +76,11 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
         this.setEmptyText("NO DATA");
 
         mAdapter = new AppDataAdapter(getActivity());
-        Log.d(TAG, "mAdapter isEmpty: " +mAdapter.isEmpty());
+        Log.d(TAG, "mAdapter isEmpty: " + mAdapter.isEmpty());
         setListAdapter(mAdapter);
         getListView().setOnItemClickListener(this);
 
 
-        // mAdapter = new AppDataAdapter(getActivity());
-       // setListAdapter(mAdapter);
-       // getListView().setOnItemClickListener(this);
-//        ListPopulator listPopulator = new ListPopulator();
-//        listPopulator.execute();
 
     }
 
@@ -104,12 +88,13 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
+   /*     try {
+            mListener = (OnFragmentInteractionListener) getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(getActivity().toString()
                     + " must implement OnFragmentInteractionListener");
-        }
+        }*/
+
     }
 
     @Override
@@ -155,76 +140,5 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
         // TODO: Update argument type and name
         public void onFragmentInteraction(String id);
     }
-    private class AsyncTaskRunner extends AsyncTask<String, ArrayList<AppItem>, ArrayList<AppItem>> {
 
-        @Override
-        protected void onPreExecute() {
-            Log.d(TAG, "TODO: SHOW PROGRESS DIALOG - start fetching data");
-        }
-
-        @Override
-        protected ArrayList<AppItem> doInBackground(String... params) {
-
-            PackageManager pm = getContext().getPackageManager();
-            /*
-             If flag PackageManager.GET_UNINSTALLED_PACKAGES has been set, a list of all
-             applications including those deleted with {@code DONT_DELETE_DATA} (partially
-             installed apps with data directory) will be returned.
-             */
-            List<ApplicationInfo> apps = pm.getInstalledApplications(0);
-            Log.d(TAG, "applist size: " + apps.size());
-            ArrayList resultList = new ArrayList<AppItem>();
-
-            for(ApplicationInfo app : apps) {
-                AppItem item = new AppItem(app.className, pm.getApplicationLabel(app).toString(), false, false, app.dataDir);
-                resultList.add(item);
-
-            }
-
-            Log.d(TAG, "resultList size: " + resultList.size());
-            return resultList;
-        }
-
-        protected void onPostExecute(ArrayList<AppItem> result) {
-            // execution of result of Long time consuming operation
-          //  ((AppDataAdapter)mAdapter) = result;
-            //TODO: implement onPostExecute!!
-           // Log.d(TAG, "fetching finished... AppDataAdapter.this.appItems.size = " + AppDataAdapter.this.appItems.size());
-        }
-
-
-
-    }
-
-    private class ListPopulator extends AsyncTask<String, String, String>{
-
-        @Override
-        protected void onPreExecute() {
-            // Things to be done before execution of long running operation. For
-            // example showing ProgessDialog
-            Log.d(TAG, "TODO: SHOW PROGRESS DIALOG - start fetching data");
-
-        }
-
-
-        @Override
-        protected String doInBackground(String... params) {
-            mAdapter = new AppDataAdapter(getActivity());
-
-
-
-
-            return null;
-        }
-
-        protected void onPostExecute() {
-            // execution of result of Long time consuming operation
-             setListAdapter(mAdapter);
-             getListView().setOnItemClickListener(ItemFragment.this);
-
-        }
-
-
-
-    }
 }
