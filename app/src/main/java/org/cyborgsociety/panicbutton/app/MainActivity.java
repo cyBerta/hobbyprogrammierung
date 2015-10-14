@@ -1,5 +1,7 @@
 package org.cyborgsociety.panicbutton.app;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -13,9 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import org.cyborgsociety.panicbutton.app.utils.IFragmentInteractionCallbackListener;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
-public class MainActivity extends AppCompatActivity /* implements ItemFragment.OnFragmentInteractionListener  */{
+public class MainActivity extends AppCompatActivity implements IFragmentInteractionCallbackListener{
 
     private static final String TAG = MainActivity.class.getName();
 
@@ -44,6 +50,7 @@ public class MainActivity extends AppCompatActivity /* implements ItemFragment.O
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             return true;
         } else if (id == R.id.action_delete){
             return true;
@@ -52,11 +59,43 @@ public class MainActivity extends AppCompatActivity /* implements ItemFragment.O
         return super.onOptionsItemSelected(item);
     }
 
-  /*  @Override
-    public void onFragmentInteraction(String id) {
-            Log.d(TAG, "something happende here...");
+    private void saveAppSettingData(String appId, boolean data){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        HashSet<String> deleteDataApps = (HashSet<String>) preferences.getStringSet("data", new HashSet<String>());
+        if (data){
+            deleteDataApps.add(appId);
+        } else {
+            deleteDataApps.remove(appId);
+        }
+        editor.putStringSet("data", deleteDataApps);
+        editor.commit();
     }
-*/
+
+    private void saveAppSettingCache(String appId, boolean cache){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        HashSet<String> deleteCacheApps = (HashSet<String>) preferences.getStringSet("cache", new HashSet<String>());
+        if (cache){
+            deleteCacheApps.add(appId);
+        } else {
+            deleteCacheApps.remove(appId);
+        }
+        editor.putStringSet("cache", deleteCacheApps);
+        editor.commit();
+    }
 
 
+    @Override
+    public void onFragmentItemClicked(String appId, ClickType type, boolean checked) {
+        switch (type){
+            case TYPE_DATA:
+                saveAppSettingData(appId, checked);
+                break;
+            case TYPE_CACHE:
+                saveAppSettingCache(appId, checked);
+                break;
+        }
+        //saveAppSetting();
+    }
 }

@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import org.cyborgsociety.panicbutton.app.model.AppContent;
 import org.cyborgsociety.panicbutton.app.model.AppItem;
+import org.cyborgsociety.panicbutton.app.utils.IFragmentInteractionCallbackListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.List;
 public class ItemFragment extends ListFragment implements AdapterView.OnItemClickListener {
     private static final String TAG = ItemFragment.class.getName();
 
-    private OnFragmentInteractionListener mListener;
+    private IFragmentInteractionCallbackListener mListener;
 
 
     /**
@@ -84,16 +85,10 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
 
     }
 
-
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-   /*     try {
-            mListener = (OnFragmentInteractionListener) getActivity();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
+    public void onResume() {
+        super.onResume();
+        mListener = (IFragmentInteractionCallbackListener) getActivity();
 
     }
 
@@ -108,8 +103,8 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            Log.d(TAG, "Item no " + position + "was clicked.");
-            mListener.onFragmentInteraction(((AppItem) mAdapter.getItem(position)).getId());
+         //   Log.d(TAG, "Item no " + position + "was clicked.");
+            //   mListener.onFragmentInteraction(((AppItem) mAdapter.getItem(position)).getId());
         }
     }
 
@@ -126,19 +121,5 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
         }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
-    }
 
 }
