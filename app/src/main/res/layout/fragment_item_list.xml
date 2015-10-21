@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.cyborgsociety.panicbutton.app.ItemFragment">
+    tools:context=".MainActivity">
+    <!--"org.cyborgsociety.panicbutton.app.ItemFragment"> -->
 
-    <ListView android:id="@android:id/list"
+
+    <include layout="@layout/listhead"
+        android:id="@+id/headerContainer"
+        ></include>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:layout_below="@id/headerContainer"
+        >
 
-    <TextView android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        />
+        <ListView android:id="@android:id/list"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
 
-</FrameLayout>
+            />
+
+        <TextView android:id="@android:id/empty"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:gravity="center"
+                  android:focusable="false"
+                  android:clickable="false"
+            />
+
+    </FrameLayout>
+
+
+</RelativeLayout>

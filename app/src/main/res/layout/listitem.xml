@@ -11,7 +11,7 @@
         android:id="@+id/cb_data"
         android:enabled="true"
         android:checked="false"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="60dp" />
 
@@ -23,6 +23,7 @@
         android:enabled="true"
         android:layout_marginEnd="20dp"
         android:layout_alignBottom="@+id/cb_data"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentEnd="true" />
 
     <TextView

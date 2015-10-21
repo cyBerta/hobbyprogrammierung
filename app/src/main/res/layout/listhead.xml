@@ -30,7 +30,7 @@
         android:id="@+id/tv_data"
         android:layout_centerInParent="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="100dp" />
+        android:layout_marginEnd="60dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
         android:id="@+id/tv_cache"
         android:layout_centerInParent="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="20dp" />
+        android:layout_marginEnd="5dp" />
 
 
 </RelativeLayout>
