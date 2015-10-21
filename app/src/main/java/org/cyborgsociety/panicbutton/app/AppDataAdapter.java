@@ -16,11 +16,9 @@ import android.widget.TextView;
 
 import org.cyborgsociety.panicbutton.app.model.AppItem;
 import org.cyborgsociety.panicbutton.app.utils.IAppDataAdapterCallbackInterface;
-import org.cyborgsociety.panicbutton.app.utils.IAppItemPropertyInterface;
 import org.cyborgsociety.panicbutton.app.utils.enums.ClickType;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -49,14 +47,9 @@ public class AppDataAdapter extends BaseAdapter
         ArrayList resultList = new ArrayList<AppItem>();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-      //  HashSet<String> deleteCacheApps = (HashSet<String>) preferences.getStringSet(ClickType.TYPE_CACHE.name(), new HashSet<String>());
-      //  HashSet<String> deleteDataApps = (HashSet<String>) preferences.getStringSet(ClickType.TYPE_DATA.name(), new HashSet<String>());
-
         for(ApplicationInfo app : apps) {
             if (app.className != null){
                 AppItem item = new AppItem(app.className, pm.getApplicationLabel(app).toString(), false, false, app.dataDir);
-               // item.setDeleteCache(deleteCacheApps.contains(item.getId()) ? true : false);
-               // item.setDeleteData(deleteDataApps.contains(item.getId()) ? true : false);
                 item.setDeleteCache((preferences.getString(item.getId()+ClickType.TYPE_CACHE.name(), null) != null) ? true : false);
                 item.setDeleteData((preferences.getString(item.getId()+ClickType.TYPE_DATA.name(), null) != null) ? true : false);
 

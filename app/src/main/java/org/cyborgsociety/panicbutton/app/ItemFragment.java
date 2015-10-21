@@ -62,9 +62,7 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
 
         super.onActivityCreated(savedInstanceState);
         this.setEmptyText("NO DATA");
-        View header = this.getView().findViewById(R.id.headerContainer);
-        header.setVisibility(View.VISIBLE);
-       // getListView().addHeaderView(header);
+
 
     }
 
