@@ -1,26 +1,18 @@
 package org.cyborgsociety.panicbutton.app;
 
-import android.app.Activity;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ListAdapter;
-import android.widget.TextView;
+import android.widget.*;
 
-import org.cyborgsociety.panicbutton.app.model.AppContent;
-import org.cyborgsociety.panicbutton.app.model.AppItem;
-import org.cyborgsociety.panicbutton.app.utils.IFragmentInteractionCallbackListener;
+import org.cyborgsociety.panicbutton.app.utils.IAppDataAdapterCallbackInterface;
+import org.cyborgsociety.panicbutton.app.utils.IAppItemPropertyInterface;
+import org.cyborgsociety.panicbutton.app.utils.enums.ClickType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.zip.Inflater;
 
 /**
  * A fragment representing a list of Items.
@@ -28,13 +20,15 @@ import java.util.List;
  * Large screen devices (such as tablets) are supported by replacing the ListView
  * with a GridView.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link IAppItemPropertyInterface}
  * interface.
  */
-public class ItemFragment extends ListFragment implements AdapterView.OnItemClickListener {
+
+
+public class ItemFragment extends ListFragment implements AdapterView.OnItemClickListener, IAppDataAdapterCallbackInterface {
     private static final String TAG = ItemFragment.class.getName();
 
-    private IFragmentInteractionCallbackListener mListener;
+    private IAppItemPropertyInterface mListener;
 
 
     /**
@@ -43,12 +37,6 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
      */
     private ListAdapter mAdapter;
 
-    public static ItemFragment newInstance(){
-        ItemFragment fragment = new ItemFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -66,7 +54,6 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, true);
-
         return view;
     }
 
@@ -75,20 +62,21 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
 
         super.onActivityCreated(savedInstanceState);
         this.setEmptyText("NO DATA");
-
-        mAdapter = new AppDataAdapter(getActivity());
-        Log.d(TAG, "mAdapter isEmpty: " + mAdapter.isEmpty());
-        setListAdapter(mAdapter);
-        getListView().setOnItemClickListener(this);
-
-
+        View header = this.getView().findViewById(R.id.headerContainer);
+        header.setVisibility(View.VISIBLE);
+       // getListView().addHeaderView(header);
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mListener = (IFragmentInteractionCallbackListener) getActivity();
+
+        mListener = (IAppItemPropertyInterface) getActivity();
+        mAdapter = new AppDataAdapter(getActivity());
+        Log.d(TAG, "mAdapter isEmpty: " + mAdapter.isEmpty());
+        setListAdapter(mAdapter);
+        ((AppDataAdapter)mAdapter).setAppDataAdapterCallbackinterface(this);
 
     }
 
@@ -96,16 +84,9 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
+        setListAdapter(null);
+        ((AppDataAdapter)mAdapter).setAppDataAdapterCallbackinterface(null);
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-         //   Log.d(TAG, "Item no " + position + "was clicked.");
-            //   mListener.onFragmentInteraction(((AppItem) mAdapter.getItem(position)).getId());
-        }
     }
 
     /**
@@ -120,6 +101,25 @@ public class ItemFragment extends ListFragment implements AdapterView.OnItemClic
             ((TextView) emptyView).setText(emptyText);
         }
     }
+
+
+    @Override
+    public void onCustomItemClicked(String appId, ClickType type, boolean checked) {
+        if (mListener != null && mAdapter != null){
+            Log.d(TAG, "onCustomItemClicked: " + appId + "checked: " + checked);
+            mListener.onAppItemPropertyChanged(appId, type, checked);
+        } else {
+            Log.d(TAG, (mListener == null ? "mListener is null!" : "mListener is notNull"));
+        }
+    }
+
+
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
 
 
 }

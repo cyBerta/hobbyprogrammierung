@@ -1,36 +1,29 @@
 package org.cyborgsociety.panicbutton.app;
 
 import android.content.SharedPreferences;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
-import org.cyborgsociety.panicbutton.app.utils.IFragmentInteractionCallbackListener;
+import org.cyborgsociety.panicbutton.app.utils.IAppItemPropertyInterface;
+import org.cyborgsociety.panicbutton.app.utils.enums.ClickType;
 
 import java.util.HashSet;
-import java.util.Set;
 
 
-public class MainActivity extends AppCompatActivity implements IFragmentInteractionCallbackListener{
+public class MainActivity extends AppCompatActivity implements IAppItemPropertyInterface {
 
     private static final String TAG = MainActivity.class.getName();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        super.onCreate(null);
+        setContentView(R.layout.activity_main);
     }
 
 
@@ -54,48 +47,55 @@ public class MainActivity extends AppCompatActivity implements IFragmentInteract
             return true;
         } else if (id == R.id.action_delete){
             return true;
+        } else if (id == R.id.action_quit){
+            finish();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveAppSettingData(String appId, boolean data){
+    private synchronized void saveAppSettingData(String appId){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String deleteDataApp = preferences.getString(appId + ClickType.TYPE_DATA.name(), null);
         SharedPreferences.Editor editor = preferences.edit();
-        HashSet<String> deleteDataApps = (HashSet<String>) preferences.getStringSet("data", new HashSet<String>());
-        if (data){
-            deleteDataApps.add(appId);
+
+        Log.d(TAG, "saveAppSettingData appid: " + appId + " value: " + deleteDataApp);
+        if (deleteDataApp == null){
+            editor.putString(appId+ClickType.TYPE_DATA.name(), appId + ClickType.TYPE_DATA.name());
         } else {
-            deleteDataApps.remove(appId);
+            editor.remove(appId+ClickType.TYPE_DATA.name());
         }
-        editor.putStringSet("data", deleteDataApps);
-        editor.commit();
+        editor.apply();
     }
 
-    private void saveAppSettingCache(String appId, boolean cache){
+    private synchronized void saveAppSettingCache(String appId){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String deleteCacheApp = preferences.getString(appId + ClickType.TYPE_CACHE.name(), null);
         SharedPreferences.Editor editor = preferences.edit();
-        HashSet<String> deleteCacheApps = (HashSet<String>) preferences.getStringSet("cache", new HashSet<String>());
-        if (cache){
-            deleteCacheApps.add(appId);
+
+        Log.d(TAG, "saveAppSettingCache appid: " + appId + "value: " + ClickType.TYPE_CACHE.name());
+
+        if (deleteCacheApp == null){
+            editor.putString(appId + ClickType.TYPE_CACHE.name(), appId + ClickType.TYPE_CACHE.name());
         } else {
-            deleteCacheApps.remove(appId);
+            editor.remove(appId + ClickType.TYPE_CACHE.name());
         }
-        editor.putStringSet("cache", deleteCacheApps);
-        editor.commit();
+        //editor.putStringSet(ClickType.TYPE_CACHE.name(), deleteCacheApps);
+        editor.apply();
     }
 
 
     @Override
-    public void onFragmentItemClicked(String appId, ClickType type, boolean checked) {
+    public void onAppItemPropertyChanged(String appId, ClickType type, boolean checked) {
+        Log.d(TAG, "onAppItemPropertyChanged!! appID: " + appId + " clickType: " + type.toString() + " checked: " + checked);
         switch (type){
             case TYPE_DATA:
-                saveAppSettingData(appId, checked);
+                saveAppSettingData(appId);
                 break;
             case TYPE_CACHE:
-                saveAppSettingCache(appId, checked);
+                saveAppSettingCache(appId);
                 break;
         }
-        //saveAppSetting();
     }
 }
